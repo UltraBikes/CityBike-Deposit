@@ -11,6 +11,7 @@ Forked from https://github.com/sampsakuronen/kaupunkifillarit-web
 ```
 nvm install
 npm install
+npm install strftime
 npm start / npm run watch
 ```
 
