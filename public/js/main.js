@@ -210,8 +210,8 @@ function toggleSidebar() {
 }
 
 function initializeApp() {
-  document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar)
-  document.getElementById('sidebar-close').addEventListener('click', toggleSidebar)
+  //document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar)
+  //document.getElementById('sidebar-close').addEventListener('click', toggleSidebar)
 
   initializeGoogleMaps()
 
