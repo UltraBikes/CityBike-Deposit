@@ -18,7 +18,8 @@
     "lokka": "1.7.0",
     "lokka-transport-http": "1.4.0",
     "mongodb": "2.2.9",
-    "nodemon": "1.10.2"
+    "nodemon": "1.10.2",
+    "strftime": "^0.9.2"
   },
   "engines": {
     "node": "6.5.0"
