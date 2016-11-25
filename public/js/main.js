@@ -87,11 +87,11 @@ function createBlankMarker(lat, lon) {
 function setLabelColorThreeTone(bikesAvailable, totalSpaces) {
   var fillRate = (Math.floor(((1-(totalSpaces-bikesAvailable)/totalSpaces))*10))*10
   if (fillRate > 80) {
-    var labelColor = '#ff704d'
+    var labelColor = '#c9c9c9'
   } else if (fillRate < 10 || bikesAvailable < 3) {
-    var labelColor = '#80ccff'
+    var labelColor = '#03c100'
   } else {
-    labelColor = '#ccffcc'
+    labelColor = '#c9c9c9'
   }
   return labelColor;
 }

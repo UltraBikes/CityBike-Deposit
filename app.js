@@ -6,7 +6,7 @@ var stationDataByMoment = null
 const app = express()
 const request = require("request")
 const strftime = require('strftime')
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3003
 
 app.disable('x-powered-by')
 app.use(compress())
