@@ -81,6 +81,31 @@
       line-height: 18px;
     }
 
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+    }
+
+    li {
+      float: center;
+    }
+
+    li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+
+    /* Change the link color to #111 (black) on hover */
+    li a:hover {
+      background-color: #111;
+    }
+
     #map-canvas{
       position: fixed;
       top: 0;
@@ -202,26 +227,7 @@
 </head>
 
 <body>
-  <!--
 
-   torReaktorReaktorRe                                                                          rReakto
-   torReaktorReaktorReak                                                  orReakt               rReakto
-   torReaktorReaktorReakto                                                orReakt               rReakto
-   torReakt       orReakto     torReaktorReakt     ktorReaktorReakt       orReakt               rReaktorReakt      torReaktorRea                   ea
-   torReakt       orReakto   aktorReaktorReakto    ktorReaktorReaktorR    orReakt     ktorRea   rReaktorReakt   eaktorReaktorReakto     torRea  orRea
-   torReakt      torReak   ReaktorR     rReaktor              ReaktorR    orReakt    aktorR     rReakto       rReaktorReaktorReaktorR   torReaktorRea
-   torReaktorReaktorRe     ReaktorReaktorReaktor              ReaktorR    orReakt  Reakto       rReakto       rReaktorR      ReaktorRe  torReakto
-   torReaktorReaktorRe     ReaktorReaktorReakto    ktorReaktorReaktorR    orReaktorReaktor      rReakto       rReaktorR      ReaktorRe  torReak
-   torReak      ktorRea    Reaktor                aktorReaktorReaktorR    orReaktorReaktorR     rReakto       rReaktorR      ReaktorRe  torReak
-   torReak       torReak   ReaktorRe              aktorRea    ReaktorR    orReaktorR aktorRe    rReaktorReak   ReaktorReaktorReaktor    torReak
-   torReak        orReakto  eaktorReaktorReaktor  aktorReaktorReaktorRea  orReakto    ktorRea   rReaktorReakt    aktorReaktorReakt      torReak
-   torReak          Reakto     torReaktorReak       torReakt    aktorRea  orReakt      torReakt     ktorReakt      torReaktorRe         torReak
-                                                                                        orReakto
-                                                                                         rReaktor
-
-                                      We are hiring people like you. People who like to see how things work.
-                                                                reaktor.com/careers
--->
 
   <!-- Sidebar
   <div id="sidebar-toggle"></div>
@@ -244,6 +250,10 @@
       <p>Tiedot ovat HSL:n tarjoamaa avointa dataa.</p>
     </div>
   </div> -->
+
+  <ul>
+    <li><a href="default.asp">Select destination</a></li>
+  </ul>
 
   <!-- Map -->
   <div id="map-canvas"></div>
