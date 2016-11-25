@@ -1,4 +1,4 @@
-var map = null
+var mapGlobal = null
 var markers = new Map();
 var locationMarker = null
 var headingMarker = null
@@ -42,7 +42,7 @@ function initializeGoogleMaps() {
   }
 
   var mapElement = document.getElementById('map-canvas')
-  map = new google.maps.Map(mapElement, mapOptions)
+  mapGlobal = new google.maps.Map(mapElement, mapOptions)
 
   getUserGPSLocation()
 }
@@ -71,7 +71,7 @@ function setStationMarkerContent(marker, bikesAvailable, totalSpaces) {
 function createBlankMarker(lat, lon) {
   var marker = new MarkerWithLabel({
     position: new google.maps.LatLng(lat, lon),
-    map: map,
+    map: mapGlobal,
     icon: {
       path: 'M1.0658141e-14,-54 C-11.0283582,-54 -20,-44.5228029 -20,-32.873781 C-20,-19.2421314 -1.49104478,-1.30230657 -0.703731343,-0.612525547 L-0.00447761194,-7.10542736e-15 L0.697761194,-0.608583942 C1.48656716,-1.29048175 20,-19.0458394 20,-32.873781 C20,-44.5228029 11.0276119,-54 1.0658141e-14,-54 L1.0658141e-14,-54 Z',
       fillOpacity: 0.5,
