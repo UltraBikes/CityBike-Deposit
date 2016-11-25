@@ -44,7 +44,8 @@ function initializeGoogleMaps() {
   var mapElement = document.getElementById('map-canvas')
   mapGlobal = new google.maps.Map(mapElement, mapOptions)
 
-  getUserGPSLocation()
+  //getUserGPSLocation()
+  renderUserGPSLocation()
 }
 
 function createStation(stationObject) {
@@ -87,11 +88,11 @@ function createBlankMarker(lat, lon) {
 function setLabelColorThreeTone(bikesAvailable, totalSpaces) {
   var fillRate = (Math.floor(((1-(totalSpaces-bikesAvailable)/totalSpaces))*10))*10
   if (fillRate > 80) {
-    var labelColor = '#ff704d'
+    var labelColor = '#c9c9c9'
   } else if (fillRate < 10 || bikesAvailable < 3) {
-    var labelColor = '#80ccff'
+    var labelColor = '#03c100'
   } else {
-    labelColor = '#ccffcc'
+    labelColor = '#c9c9c9'
   }
   return labelColor;
 }
@@ -139,7 +140,7 @@ function setupHeadingMarker(userLatLng) {
     headingMarker = new google.maps.Marker({
       position: userLatLng,
       icon: headingIconBaseOptions,
-      map: map
+      map: mapGlobal
     })
   }
   function rotateHeadingIcon(eventData) {
@@ -165,32 +166,26 @@ function createOrUpdateLocationMarker(userLatLng) {
     locationMarker = new google.maps.Marker({
       position: userLatLng,
       icon: locationIconBaseOptions,
-      map: map
+      map: mapGlobal
     })
   }
 }
 
-function geolocationSuccess(position) {
-  var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+function renderUserGPSLocation() {
+  var lat = 60.170555
+  var lon = 24.940640
+  var userLatLng = new google.maps.LatLng(lat, lon)
 
   createOrUpdateLocationMarker(userLatLng)
   setupHeadingMarker(userLatLng)
 
+  mapGlobal.panTo(userLatLng)
+  /*
   if (!outsideOperationTheatre(position) && !pannedThisSession) {
-    map.panTo(userLatLng)
+    mapGlobal.panTo(userLatLng)
     pannedThisSession = true
   }
-}
-
-function getUserGPSLocation() {
-  var geolocationOptions = {
-    enableHighAccuracy: true,
-    timeout: 30 * 1000,
-    maximumAge: 60,
-    frequency: 1000
-  }
-
-  navigator.geolocation.watchPosition(geolocationSuccess, function(){}, geolocationOptions)
+  */
 }
 
 function getJSON(url, callback) {
