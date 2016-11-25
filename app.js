@@ -95,6 +95,7 @@ function repeatedStationInfoGetter() {
 
 app.listen(port, () => {
   console.log(`Kaupunkifillarit.fi listening on *:${port}`)
-  setInterval(repeatedStationInfoGetter, 2 * 1000);
+  //setInterval(repeatedStationInfoGetter, 2 * 1000);
+  getStationDataFromServer(new Date("2016-07-04T08:15:01"));
   console.log('App running! Check http://localhost:3001/');
 })
