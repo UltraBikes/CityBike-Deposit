@@ -40,7 +40,7 @@ function getRoute() {
   graphQLClient.query(`
 {
   plan(
-    from: {lat: 60.170015, lon: 24.935259},
+    from: {lat: 60.169045, lon: 24.939429},
     to: {lat: 60.174938, lon: 24.927203},
     modes: "BICYCLE",
     walkReluctance: 2.1,
