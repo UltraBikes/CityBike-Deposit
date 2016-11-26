@@ -57,12 +57,12 @@ function drawRoute(routeObj) {
   console.log(routeObj.coordinates.length)
   for (var i = 0; i < routeObj.coordinates.length -2; i++) {
         var line = new google.maps.Polyline({
-        path: [new google.maps.LatLng(routeObj.coordinates[i].lat, routeObj.coordinates[i].lon), new google.maps.LatLng(routeObj.coordinates[i + 1].lat, routeObj.coordinates[i + 1].lon)],
-        strokeColor: "#425cf4",
-        strokeOpacity: 1.0,
-        strokeWeight: 7,
-        map: mapGlobal
-      });
+          path: [new google.maps.LatLng(routeObj.coordinates[i].lat, routeObj.coordinates[i].lon), new google.maps.LatLng(routeObj.coordinates[i + 1].lat, routeObj.coordinates[i + 1].lon)],
+          strokeColor: "#425cf4",
+          strokeOpacity: 1.0,
+          strokeWeight: 7,
+          map: mapGlobal
+        });
 
     }
 
@@ -274,13 +274,6 @@ function setMarkerClickEvents () {
       }
       // Clear map of markers
       markers.forEach(function (mrk) {
-        //mrk.marker.setMap(null)
-        mrk.marker.setIcon({
-          path: 'M1.0658141e-14,-54 C-11.0283582,-54 -20,-44.5228029 -20,-32.873781 C-20,-19.2421314 -1.49104478,-1.30230657 -0.703731343,-0.612525547 L-0.00447761194,-7.10542736e-15 L0.697761194,-0.608583942 C1.48656716,-1.29048175 20,-19.0458394 20,-32.873781 C20,-44.5228029 11.0276119,-54 1.0658141e-14,-54 L1.0658141e-14,-54 Z',
-          fillOpacity: 0,
-          scale: 1.1,
-          strokeWeight: 1
-        })
         mrk.marker.setMap(null)
       })
       markers.clear()
