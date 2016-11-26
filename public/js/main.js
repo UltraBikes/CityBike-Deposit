@@ -319,7 +319,6 @@ function createNearestStationsToUser(data, nearestStations) {
   })
 }
 
-<<<<<<< HEAD
 // Choose a pick-up station for a bike
 function setPickUpPointClicks (target, choices) {
   choices.forEach(function (choice) {
@@ -333,7 +332,6 @@ function setPickUpPointClicks (target, choices) {
   })
 }
 
-=======
 function createBasicStationMarker(station) {
   var marker = new MarkerWithLabel({
     position: new google.maps.LatLng(station.lat, station.lon),
@@ -351,19 +349,13 @@ function createBasicStationMarker(station) {
 }
 
 
->>>>>>> Add marker color functionality
 // Click on a marker hides all the nearby markers
 function setMarkerClickEvents () {
   // Set click events to moneyMarkers
   moneyMarkers.forEach(function (mObj) {
     // Set click event
     google.maps.event.addListener(mObj.marker, 'click', function (e) {
-<<<<<<< HEAD
-
-=======
       saveChosenDestinationStation(mObj.marker)
-      console.log(mObj.marker)
->>>>>>> Add marker color functionality
       // Get the 3 nearest stations to user
       var nearestStations = getNearestStations(3)
       // Clear map of markers
@@ -377,8 +369,6 @@ function setMarkerClickEvents () {
   })
 }
 
-<<<<<<< HEAD
-=======
 function saveChosenDestinationStation(chosenMarker) {
   chosenDestinationMarker = new MarkerWithLabel({
     position: chosenMarker.position,
@@ -399,7 +389,6 @@ function travelBetweenDots() {
 
 }
 
->>>>>>> Add marker color functionality
 // Calculate distance between a pair of latitude longitude points
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
