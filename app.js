@@ -36,7 +36,6 @@ app.get('/api/route', (req, res) => {
 })
 
 function getRoute() {
-  console.log("reitti")
   graphQLClient.query(`
 {
   plan(

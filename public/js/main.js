@@ -272,6 +272,11 @@ function setMarkerClickEvents () {
         smallestDistObj.distance = -1
         nearestMarkersArr.push(smallestDistObj) // Nearest marker to user
       }
+      nearestMarkersArr.forEach(function (m i){
+        google.maps.event.addListener(m, 'click', function (e) {
+          console.log("klikkkkk")
+        })
+      })
       // Clear map of markers
       markers.forEach(function (mrk) {
         //mrk.marker.setMap(null)
