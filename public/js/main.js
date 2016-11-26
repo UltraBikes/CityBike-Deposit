@@ -1,5 +1,6 @@
 var mapGlobal = null
 var markers = new Map();
+var moneyMarkers = new Map();
 var locationMarker = null
 var headingMarker = null
 var pannedThisSession = false
@@ -68,18 +69,28 @@ function drawRoute(routeObj) {
     }
 
 }
-function createStation(stationObject) {
+
+// Create a new marker for a bike station
+// Param money is the reward in euros
+function createStation(stationObject, money) {
   var stationMarker = createBlankMarker(stationObject.lat, stationObject.lon)
 
   var spacesAvailable = parseInt(stationObject.spacesAvailable)
   var bikesAvailable = parseInt(stationObject.bikesAvailable)
   var totalSpaces = spacesAvailable + bikesAvailable
 
-  markers.set(stationObject.id, setStationMarkerContent(stationMarker, bikesAvailable, totalSpaces))
+  var newMarker = setStationMarkerContent(stationMarker, bikesAvailable, totalSpaces, money)
+  markers.set(stationObject.id, {marker: newMarker, fullness: bikesAvailable/totalSpaces})
+  // If marker is worth money
+  if (money > 0) {
+    // Push to moneyMarkers
+    moneyMarkers.set(stationObject.id, {marker: newMarker, fullness: bikesAvailable/totalSpaces})
+  }
 }
 
-function setStationMarkerContent(marker, bikesAvailable, totalSpaces) {
-  var labelContent = '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>'
+// Set styles of a marker: reward in euros and color
+function setStationMarkerContent(marker, bikesAvailable, totalSpaces, money) {
+  var labelContent = '<div class="count">' + money + '€</div>'
   var labelColor = setLabelColorThreeTone(bikesAvailable, totalSpaces)
 
   marker.icon.fillColor = labelColor
@@ -229,6 +240,96 @@ function toggleSidebar() {
   document.querySelectorAll('.sidebar')[0].classList.toggle('visible')
 }
 
+// Click on a marker hides all the nearby markers
+function setMarkerClickEvents () {
+  // Get user's locations
+  var usrLat = locationMarker.position.lat()
+  var usrLng = locationMarker.position.lng()
+  // Set click events to moneyMarkers
+  moneyMarkers.forEach(function (mObj) {
+    // Set click event
+    google.maps.event.addListener(mObj.marker, 'click', function (e) {
+      var markerDistancesArr = [] // Array of markers with distances to user
+      var nearestMarkersArr = [] // Array of 3 nearest markers to user
+      markers.forEach(function (m, id) {
+        // Push markers and their distances  to user in an array
+        markerDistancesArr.push({
+          distance: getDistanceFromLatLonInKm(usrLat, usrLng, m.marker.position.lat(), m.marker.position.lng()),
+          marker: m.marker,
+          id: id,
+          fullness: m.fullness
+        })
+      })
+      // Get 3 nearest stations to the user that are at least half full
+      for (var i=0; i<3; i++) {
+        var smallestDistObj = {distance: 1000, marker: null, fullness: 0} // Max distance we show is 1000km
+        // For each 'distance/marker' -pair
+        markerDistancesArr.forEach(function (obj) {
+          // Marker is the new nearest
+          if (smallestDistObj.distance > obj.distance && obj.distance !== -1) {
+            // Marker also has enough bikes, 50% at least
+            if (obj.fullness >= 0.5) {
+              obj.distance = -1
+              smallestDistObj = obj
+            }
+          }
+        })
+        nearestMarkersArr.push(smallestDistObj) // Nearest marker to user
+      }
+      // Clear map of markers
+      markers.forEach(function (mrk) {
+        //mrk.marker.setMap(null)
+        mrk.marker.setIcon({
+          path: 'M1.0658141e-14,-54 C-11.0283582,-54 -20,-44.5228029 -20,-32.873781 C-20,-19.2421314 -1.49104478,-1.30230657 -0.703731343,-0.612525547 L-0.00447761194,-7.10542736e-15 L0.697761194,-0.608583942 C1.48656716,-1.29048175 20,-19.0458394 20,-32.873781 C20,-44.5228029 11.0276119,-54 1.0658141e-14,-54 L1.0658141e-14,-54 Z',
+          fillOpacity: 0,
+          scale: 1.1,
+          strokeWeight: 1
+        })
+        mrk.marker.setMap(null)
+      })
+      markers.clear()
+      moneyMarkers.clear()
+      // Update data and set possible pick up markers
+      getJSON('/api/stations', function(data) {
+        data.bikeRentalStations.map(function (station) {
+          var available = false // if available for pick up
+          nearestMarkersArr.forEach(function (mNear) {
+            if (mNear.id === station.id) {
+              available = true
+            }
+          })
+          if (available) {
+            createStation(station, 1)
+          } else {
+            createStation(station, 0)
+          }
+        })
+      })
+    })
+  })
+}
+
+// Set visibility
+
+// Calculate distance between a pair of latitude longitude points
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+// Helper for the function above - getDistanceFromLatLonInKm
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
 function initializeApp() {
   //document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar)
   //document.getElementById('sidebar-close').addEventListener('click', toggleSidebar)
@@ -240,7 +341,42 @@ function initializeApp() {
 
 function initializeMarkers() {
   getJSON('/api/stations', function(data) {
-    data.bikeRentalStations.map(createStation)
+    // For each bike station
+    data.bikeRentalStations.map(function (stationObject) {
+      var lat = stationObject.lat // latitude
+      var lon = stationObject.lon // longitude
+      // Create a marker if less than 4 bikes available
+      if (stationObject.bikesAvailable < 3) {
+        // Urgent need if 0 bikes
+        var urgent = (stationObject.bikesAvailable === 0 ? true : false)
+        var bikesAvailableNearby = false;
+        // Check all the nearby stations
+        data.bikeRentalStations.forEach(function (station) {
+          var distance = getDistanceFromLatLonInKm(lat, lon, station.lat, station.lon)
+          // If station is near and has more than 5 bikes
+          if (distance < 0.25 && station.bikesAvailable>5) {
+            bikesAvailableNearby = true
+          }
+        })
+        // If urgent and not many bikes available nearby 1e
+        if (urgent && !bikesAvailableNearby) {
+          createStation(stationObject, 1)
+        } else if (urgent) {
+          // Urgent, but there are bikes available nearby 0.5e
+          createStation(stationObject, 0.5)
+        } else if (!bikesAvailableNearby) {
+          // Not urgent, but not many bikes available nearby 0.7e
+          createStation(stationObject, 0.7)
+        } else {
+          // Not urgent and bikes available nearby 0.2e
+          createStation(stationObject, 0.2)
+        }
+      } else {
+        createStation(stationObject, 0)
+      }
+    })
+    setMarkerClickEvents(data)
+<<<<<<< Updated upstream
   })
 }
 
@@ -248,6 +384,8 @@ function getRoute() {
   getJSON('/api/route', function(data) {
     console.log(data.coordinates[0].lon + "mainissa")
     drawRoute(data)
+=======
+>>>>>>> Stashed changes
   })
 }
 
@@ -262,8 +400,6 @@ function ready(fn) {
     document.addEventListener('DOMContentLoaded', fn)
   }
 }
-
-
 
 ready(initializeApp)
 ready(initializeMarkers)
