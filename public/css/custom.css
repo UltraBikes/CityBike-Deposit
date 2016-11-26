@@ -1,0 +1,194 @@
+.alignleft {
+  float: left;
+}
+.alignright {
+  float: right;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit
+}
+
+p {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #d8d8d8;
+}
+
+li {
+  float: center;
+}
+
+li a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+#menubar{
+  margin-left: 5px;
+}
+
+#map-canvas{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: inherit;
+}
+
+.count {
+  color: #000000;
+  font-size: 12px;
+  width: 40px;
+  text-align: center;
+  display: inline-block;
+  word-spacing: -0.1em;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+#sidebar-toggle {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  height: 3em;
+  width: 3em;
+  z-index: 3000;
+  background: #FCBC19;
+  background-image: url('/img/kaupunkifillarit-logo.svg');
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: 50% 45%;
+  border-radius: 0.25em;
+  cursor: pointer;
+}
+
+.sidebar {
+  z-index: 4000;
+  position: fixed;
+  display: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: #FCBC19;
+  color: #333333;
+  opacity: 0.97;
+  overflow-y: scroll;
+}
+
+.menubar{
+  margin-left: 7px;
+  margin-right: 7px;
+  margin-top: 7px;
+}
+
+.panel{
+  height: 50px;
+  background-color: yellow;
+}
+
+.panel-body {
+  background-color: transparent;
+}
+
+.menu-container{
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+
+
+#sidebar-close {
+  display: block;
+  cursor: pointer;
+  position: fixed;
+  right: 1.5em;
+  top: 1.5em;
+  z-index: 4100;
+}
+
+.visible {
+  display: block;
+}
+
+.logo-container img {
+  width: 40%;
+  display: block;
+  margin: 2em auto;
+}
+
+.description-container {
+  position: absolute;
+  padding: 2em 2em 1em 1.5em;
+}
+
+.description-container h1 {
+  font-size: 36px;
+  line-height: 36px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+@media screen and (min-width: 900px) {
+  .sidebar {
+    display: block;
+    left: auto;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px;
+    height: 100%;
+  }
+
+  .visible {
+    display: none;
+  }
+
+  .description-container {
+    bottom: 0;
+  }
+
+  .logo-container img {
+    width: 50%;
+    display: block;
+    margin: 5em auto;
+  }
+}
+
+@media screen and (max-height: 720px) {
+  .logo-container {
+    display: none;
+  }
+}

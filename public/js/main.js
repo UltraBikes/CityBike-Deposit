@@ -4,6 +4,7 @@ var locationMarker = null
 var headingMarker = null
 var pannedThisSession = false
 
+
 var locationBaseColor = '#40b3ff'
 
 var headingIconBaseOptions = {
@@ -48,6 +49,25 @@ function initializeGoogleMaps() {
   renderUserGPSLocation()
 }
 
+/**
+* draws route based on JSON coordinatelist
+*/
+function drawRoute(routeObj) {
+  console.log("piirto")
+  console.log(routeObj.coordinates.length)
+  for (var i = 0; i < routeObj.coordinates.length -2; i++) {
+      console.log(i)
+        var line = new google.maps.Polyline({
+        path: [new google.maps.LatLng(routeObj.coordinates[i].lat, routeObj.coordinates[i].lon), new google.maps.LatLng(routeObj.coordinates[i + 1].lat, routeObj.coordinates[i + 1].lon)],
+        strokeColor: "#425cf4",
+        strokeOpacity: 1.0,
+        strokeWeight: 7,
+        map: mapGlobal
+      });
+
+    }
+
+}
 function createStation(stationObject) {
   var stationMarker = createBlankMarker(stationObject.lat, stationObject.lon)
 
@@ -210,8 +230,8 @@ function toggleSidebar() {
 }
 
 function initializeApp() {
-  document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar)
-  document.getElementById('sidebar-close').addEventListener('click', toggleSidebar)
+  //document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar)
+  //document.getElementById('sidebar-close').addEventListener('click', toggleSidebar)
 
   initializeGoogleMaps()
 
@@ -221,6 +241,13 @@ function initializeApp() {
 function initializeMarkers() {
   getJSON('/api/stations', function(data) {
     data.bikeRentalStations.map(createStation)
+  })
+}
+
+function getRoute() {
+  getJSON('/api/route', function(data) {
+    console.log(data.coordinates[0].lon + "mainissa")
+    drawRoute(data)
   })
 }
 
@@ -240,3 +267,4 @@ function ready(fn) {
 
 ready(initializeApp)
 ready(initializeMarkers)
+ready(getRoute)
