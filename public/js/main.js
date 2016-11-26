@@ -67,6 +67,57 @@ function drawRoute(routeObj) {
 
 }
 
+// Create a blank marker
+function createNormalBlankMarker(lat, lon) {
+  var marker = new MarkerWithLabel({
+    position: new google.maps.LatLng(lat, lon),
+    map: mapGlobal,
+    icon: {
+      path: 'M1.0658141e-14,-54 C-11.0283582,-54 -20,-44.5228029 -20,-32.873781 C-20,-19.2421314 -1.49104478,-1.30230657 -0.703731343,-0.612525547 L-0.00447761194,-7.10542736e-15 L0.697761194,-0.608583942 C1.48656716,-1.29048175 20,-19.0458394 20,-32.873781 C20,-44.5228029 11.0276119,-54 1.0658141e-14,-54 L1.0658141e-14,-54 Z',
+      fillOpacity: 0.5,
+      scale: 1.1,
+      strokeWeight: 1
+    },
+    labelAnchor: new google.maps.Point(20, 43),
+
+  })
+  return marker
+}
+
+// Set color for normal marker
+function setNormalLabelColorThreeTone(bikesAvailable, totalSpaces) {
+  var fillRate = (Math.floor(((1-(totalSpaces-bikesAvailable)/totalSpaces))*10))*10
+  if (fillRate > 80) {
+    var labelColor = '#ff704d'
+  } else if (fillRate < 10 || bikesAvailable < 3) {
+    var labelColor = '#80ccff'
+  } else {
+    labelColor = '#ccffcc'
+  }
+  return labelColor;
+}
+
+// Normal station content
+function setNormalStationMarkerContent(marker, bikesAvailable, totalSpaces) {
+  var labelContent = '<div class="count">' + bikesAvailable + ' / ' + totalSpaces + '</div>'
+  var labelColor = setNormalLabelColorThreeTone(bikesAvailable, totalSpaces)
+
+  marker.icon.fillColor = labelColor
+  marker.icon.fillOpacity = 0.5
+  marker.labelContent = labelContent
+
+  return marker
+}
+
+// Create a normal station with bike availability
+function createNormalStation (stationObject) {
+  var stationMarker = createNormalBlankMarker(stationObject.lat, stationObject.lon)
+  var spacesAvailable = parseInt(stationObject.spacesAvailable)
+  var bikesAvailable = parseInt(stationObject.bikesAvailable)
+  var totalSpaces = spacesAvailable + bikesAvailable
+  markers.set(stationObject.id, setNormalStationMarkerContent(stationMarker, bikesAvailable, totalSpaces))
+}
+
 // Create a new marker for a bike station
 // Param money is the reward in euros
 function createStation(stationObject, money) {
@@ -298,6 +349,14 @@ function clearTheMap() {
   moneyMarkers.clear()
 }
 
+function clearNormalTheMap() {
+  markers.forEach(function (mrk) {
+    mrk.setMap(null)
+  })
+  markers.clear()
+  moneyMarkers.clear()
+}
+
 // Create markers for the nearest stations
 function createNearestStationsToUser(data, nearestStations) {
   data.bikeRentalStations.map(function (station) {
@@ -465,14 +524,8 @@ function createTargetStation (data, stationObject) {
   }
 }
 
-
-
-function initializeMarkers() {
-  var ultraBike = false // Show the ultimate feature
-  $('#bikeBtn').click(function (e) {
-    console.log('hello')
-  })
-
+// Create the markers with rewards
+function initializeAppMarkers () {
   getJSON('/api/stations', function(data) {
     // For each bike station
     data.bikeRentalStations.map(function (stationObject) {
@@ -485,6 +538,24 @@ function initializeMarkers() {
     })
     setMarkerClickEvents(data)
   })
+}
+
+// Create the markers with bike numbers
+function initializeNormalMarkers () {
+  getJSON('/api/stations', function(data) {
+    // For each bike station
+    data.bikeRentalStations.map(createNormalStation)
+  })
+}
+
+function initializeMarkers(ultimateApp) {
+  if (ultimateApp) {
+    // Initialize the markers with possible rewards
+    initializeAppMarkers()
+  } else {
+    // Initialize the markers with bike availability
+    initializeNormalMarkers()
+  }
 }
 
 function getRoute(latF, lonF, latS, lonS) {
@@ -505,5 +576,21 @@ function ready(fn) {
   }
 }
 
+function initialMonetizerButton () {
+  $('#euroBtn').click(function () {
+    $('#bikeBtn').attr('style','display:inline')
+    $('#euroBtn').attr('style','display:none')
+    clearNormalTheMap()
+    initializeMarkers(true)
+  })
+  $('#bikeBtn').click(function () {
+    $('#euroBtn').attr('style','display:inline')
+    $('#bikeBtn').attr('style','display:none')
+    clearTheMap()
+    initializeMarkers(false)
+  })
+}
+
 ready(initializeApp)
-ready(initializeMarkers)
+ready(initializeMarkers(false))
+ready(initialMonetizerButton)
