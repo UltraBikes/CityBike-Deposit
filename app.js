@@ -31,6 +31,7 @@ app.get('/api/stations', (req, res) => {
 })
 
 app.get('/api/route/:latF/:lonF/:latS/:lonS', (req, res) => {
+  getRoute(req.params['latF'], req.params['lonF'], req.params['latS'], req.params['lonS'] )
   res.setHeader('Cache-Control', 'public, max-age=10')
   res.send(route)
 })
@@ -44,7 +45,6 @@ function getStationCoordinates() {
   }
 }
  `).then(result => {
-      console.log(result)
   })
 }
 
@@ -53,8 +53,8 @@ function getRoute(lat1, lon1, lat2, lon2) {
   graphQLClient.query(`
 {
   plan(
-    from: {lat: 60.169045, lon: 24.939429},
-    to: {lat: 60.174938, lon: 24.927203},
+    from: {lat: ` + lat1 + `, lon: ` + lon1 + `},
+    to: {lat: ` + lat2 + `, lon: ` + lon2 + `},
     modes: "BICYCLE",
     walkReluctance: 2.1,
     walkBoardCost: 600,

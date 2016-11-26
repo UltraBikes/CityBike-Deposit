@@ -54,7 +54,6 @@ function initializeGoogleMaps() {
 * draws route based on JSON coordinatelist
 */
 function drawRoute(routeObj) {
-  console.log(routeObj.coordinates.length)
   for (var i = 0; i < routeObj.coordinates.length -2; i++) {
         var line = new google.maps.Polyline({
           path: [new google.maps.LatLng(routeObj.coordinates[i].lat, routeObj.coordinates[i].lon), new google.maps.LatLng(routeObj.coordinates[i + 1].lat, routeObj.coordinates[i + 1].lon)],
@@ -328,7 +327,6 @@ function setPickUpPointClicks (target, choices) {
       var latC = choice.marker.position.lat()
       var lonC = choice.marker.position.lng()
       getRoute(latT, lonT, latC, lonC)
-      console.log('find route') 
     })
   })
 }
