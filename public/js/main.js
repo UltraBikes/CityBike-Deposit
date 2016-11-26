@@ -4,7 +4,7 @@ var moneyMarkers = new Map();
 var locationMarker = null
 var headingMarker = null
 var pannedThisSession = false
-
+var chosenDestinationMarker = null
 
 var locationBaseColor = '#40b3ff'
 
@@ -82,12 +82,13 @@ function createStation(stationObject, money) {
   // If marker is worth money
   if (money > 0) {
     // Push to moneyMarkers
+    newMarker.labelClass = "destinationOptionMarker"
     moneyMarkers.set(stationObject.id, {marker: newMarker, fullness: bikesAvailable/totalSpaces})
   }
 }
 
 // Create station marker for possible departure stations
-function createDepartureStation(stationObject) {
+function createPossibleDepartureStation(stationObject) {
   var stationMarker = createBlankMarker(stationObject.lat, stationObject.lon)
 
   stationMarker.icon.fillColor = '#82ff86'
@@ -116,8 +117,7 @@ function createBlankMarker(lat, lon) {
       scale: 1.1,
       strokeWeight: 1
     },
-    labelAnchor: new google.maps.Point(20, 43),
-
+    labelAnchor: new google.maps.Point(20, 43)
   })
   return marker
 }
@@ -308,14 +308,18 @@ function createNearestStationsToUser(data, nearestStations) {
         available = true
       }
     })
+    console.log(station.id)
     if (available) {
-      createStation(station, 1)
+      createPossibleDepartureStation(station)
     } else {
-      createStation(station, 0)
+      createBasicStationMarker(station)
     }
+    console.log("Chosen target station:")
+    console.log(chosenDestinationMarker)
   })
 }
 
+<<<<<<< HEAD
 // Choose a pick-up station for a bike
 function setPickUpPointClicks (target, choices) {
   choices.forEach(function (choice) {
@@ -329,13 +333,37 @@ function setPickUpPointClicks (target, choices) {
   })
 }
 
+=======
+function createBasicStationMarker(station) {
+  var marker = new MarkerWithLabel({
+    position: new google.maps.LatLng(station.lat, station.lon),
+    map: mapGlobal,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 6,
+      strokeWeight: 2,
+      fillColor: '#c9c9c9',
+      fillOpacity: 1.0,
+      strokeColor: '#515151'
+    },
+    labelClass: "basicMarker"
+  })
+}
+
+
+>>>>>>> Add marker color functionality
 // Click on a marker hides all the nearby markers
 function setMarkerClickEvents () {
   // Set click events to moneyMarkers
   moneyMarkers.forEach(function (mObj) {
     // Set click event
     google.maps.event.addListener(mObj.marker, 'click', function (e) {
+<<<<<<< HEAD
 
+=======
+      saveChosenDestinationStation(mObj.marker)
+      console.log(mObj.marker)
+>>>>>>> Add marker color functionality
       // Get the 3 nearest stations to user
       var nearestStations = getNearestStations(3)
       // Clear map of markers
@@ -349,6 +377,29 @@ function setMarkerClickEvents () {
   })
 }
 
+<<<<<<< HEAD
+=======
+function saveChosenDestinationStation(chosenMarker) {
+  chosenDestinationMarker = new MarkerWithLabel({
+    position: chosenMarker.position,
+    map: mapGlobal,
+    icon: {
+      path: 'M1.0658141e-14,-54 C-11.0283582,-54 -20,-44.5228029 -20,-32.873781 C-20,-19.2421314 -1.49104478,-1.30230657 -0.703731343,-0.612525547 L-0.00447761194,-7.10542736e-15 L0.697761194,-0.608583942 C1.48656716,-1.29048175 20,-19.0458394 20,-32.873781 C20,-44.5228029 11.0276119,-54 1.0658141e-14,-54 L1.0658141e-14,-54 Z',
+      fillOpacity: 0.5,
+      scale: 1.1,
+      strokeWeight: 1,
+      fillColor: '#03c100'
+    },
+    labelAnchor: new google.maps.Point(20, 43)
+  })
+}
+
+// Draw the distance between two dots
+function travelBetweenDots() {
+
+}
+
+>>>>>>> Add marker color functionality
 // Calculate distance between a pair of latitude longitude points
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
