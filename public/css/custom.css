@@ -5,6 +5,10 @@
   float: right;
 }
 
+.alignverticalcenter {
+  text-align: center;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -116,7 +120,8 @@ li a {
 
 .panel{
   height: 50px;
-  background-color: yellow;
+  background-color: #c9c9c9;
+  border-color: #515151;
 }
 
 .panel-body {
