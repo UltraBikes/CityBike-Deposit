@@ -86,6 +86,13 @@ function createStation(stationObject, money) {
   }
 }
 
+// Create station marker for possible departure stations
+function createDepartureStation(stationObject) {
+  var stationMarker = createBlankMarker(stationObject.lat, stationObject.lon)
+
+  stationMarker.icon.fillColor = '#82ff86'
+}
+
 // Set styles of a marker: reward in euros and color
 function setStationMarkerContent(marker, bikesAvailable, totalSpaces, money) {
   var labelContent = '<div class="count">' + money + '€</div>'
@@ -94,6 +101,7 @@ function setStationMarkerContent(marker, bikesAvailable, totalSpaces, money) {
   marker.icon.fillColor = labelColor
   marker.icon.fillOpacity = 0.5
   marker.labelContent = labelContent
+  marker.labelClass = "basicMarker"
 
   return marker
 }
@@ -234,9 +242,6 @@ function getJSON(url, callback) {
   request = null
 }
 
-function toggleSidebar() {
-  document.querySelectorAll('.sidebar')[0].classList.toggle('visible')
-}
 
 // Create array of markers and distances
 function createMarkerDistArr() {

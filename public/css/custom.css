@@ -133,7 +133,20 @@ li a {
   padding-left: 0px;
 }
 
+.basicMarker {
+}
 
+.destinationOptionMarker {
+}
+
+.pickupOptionMarker {
+}
+
+.chosenDestinationMarker {
+}
+
+.chosenPickupMarker {
+}
 
 #sidebar-close {
   display: block;
