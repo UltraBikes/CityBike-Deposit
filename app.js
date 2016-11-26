@@ -1,16 +1,26 @@
 import _ from 'lodash'
 import express from 'express'
 import compress from 'compression'
+import Lokka from 'lokka' 
+import Transport from 'lokka-transport-http'
 
 var stationDataByMoment = null
 const app = express()
 const request = require("request")
 const strftime = require('strftime')
 const port = process.env.PORT || 3003
+const polyline = require('polyline')
+
+const HSL_GRAPHQL_URL = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql'
+var route = null
 
 app.disable('x-powered-by')
 app.use(compress())
 app.use(express.static('./public', {maxAge: 10 * 60 * 1000}))
+
+const graphQLClient = new Lokka({
+  transport: new Transport(HSL_GRAPHQL_URL)
+})
 
 /*
 * Define response for frontend request "get('/api/station')"
@@ -19,6 +29,43 @@ app.get('/api/stations', (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=10')
   res.send(stationDataByMoment)
 })
+
+app.get('/api/route', (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=10')
+  res.send(route)
+})
+
+function getRoute() {
+  console.log("reitti")
+  graphQLClient.query(`
+{
+  plan(
+    from: {lat: 60.170015, lon: 24.935259},
+    to: {lat: 60.174938, lon: 24.927203},
+    modes: "BICYCLE",
+    walkReluctance: 2.1,
+    walkBoardCost: 600,
+    minTransferTime: 180,
+    walkSpeed: 1.2,
+    maxWalkDistance: 10000
+  ) {
+    itineraries{
+      legs {
+        legGeometry {
+          length
+          points
+        }
+      }
+    }
+  }
+}
+  `).then(result => {
+    route =  result['plan']['itineraries'][0].legs[0].legGeometry.points
+    
+    return decodeRouteCoordinates(route)
+  })
+}
+
 
 /**
 * Get data of stations by datetime
@@ -33,6 +80,7 @@ function getStationDataFromServer(date) {
   var urlDate = strftime('%Y%m%dT%H%M01Z', date);
   var url = "http://juhapekm.users.cs.helsinki.fi/citybikes/stations_"+urlDate
   console.log(url)
+  getRoute()
   request({
       url: url,
       json: true
@@ -68,6 +116,23 @@ function numberOfRecordsInJson(jsonObject, key) {
 }
 
 /**
+*Returns a JSON list of points in route: {"coordinates":[{"lon": 111, "lat": 231}]}
+*/
+function decodeRouteCoordinates(points) {
+  var line = polyline.decode(points)
+  var jsondata = '{"coordinates" : [ \n' 
+  for (var i=0; i < line.length; i++) {
+    var s = line[i][0] + ", " + line[i][1]
+    jsondata += '{ "lat":' + line[i][0] + ', "lon":' + line[i][1] + '},\n'
+  }
+  jsondata = jsondata.slice(0, -2)
+  jsondata += '\n]}'
+  var parsedData = JSON.parse(jsondata)
+  route = jsondata
+  return parsedData
+}
+
+/**
 * Reformat stationData json because live data is different than history data
 */
 function reformatStationJson(stationObject) {
@@ -97,5 +162,5 @@ app.listen(port, () => {
   console.log(`Kaupunkifillarit.fi listening on *:${port}`)
   //setInterval(repeatedStationInfoGetter, 2 * 1000);
   getStationDataFromServer(new Date("2016-07-04T08:15:01"));
-  console.log('App running! Check http://localhost:3001/');
+  console.log('App running! Check http://localhost:3003/');
 })
