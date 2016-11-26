@@ -316,6 +316,19 @@ function createNearestStationsToUser(data, nearestStations) {
   })
 }
 
+// Choose a pick-up station for a bike
+function setPickUpPointClicks (target, choices) {
+  choices.forEach(function (choice) {
+    google.maps.event.addListener(choice.marker, 'click', function (e) {
+      var latT = target.position.lat()
+      var lonT = target.position.lng()
+      var latC = choice.marker.position.lat()
+      var lonC = choice.marker.position.lng()
+      getRoute(latT, lonT, latC, lonC)
+    })
+  })
+}
+
 // Click on a marker hides all the nearby markers
 function setMarkerClickEvents () {
   // Set click events to moneyMarkers
@@ -329,15 +342,10 @@ function setMarkerClickEvents () {
       // Update data and set possible pick up markers
       getJSON('/api/stations', function(data) {
         createNearestStationsToUser(data, nearestStations)
+        setPickUpPointClicks(mObj.marker, moneyMarkers)
       })
-      //travelBetweenDots(marker)
     })
   })
-}
-
-// Draw the distance between two dots
-function travelBetweenDots() {
-
 }
 
 // Calculate distance between a pair of latitude longitude points
@@ -434,8 +442,8 @@ function initializeMarkers() {
   })
 }
 
-function getRoute() {
-  getJSON('/api/route', function(data) {
+function getRoute(latF, lonF, latS, lonS) {
+  getJSON('/api/route/'+latF+'/'+lonF+'/'+latS+'/'+lonS, function(data) {
     drawRoute(data)
   })
 }
@@ -454,4 +462,3 @@ function ready(fn) {
 
 ready(initializeApp)
 ready(initializeMarkers)
-ready(getRoute)
