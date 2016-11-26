@@ -30,13 +30,26 @@ app.get('/api/stations', (req, res) => {
   res.send(stationDataByMoment)
 })
 
-app.get('/api/route', (req, res) => {
+app.get('/api/route/:latF/:lonF/:latS/:lonS', (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=10')
   res.send(route)
 })
 
-function getRoute() {
-  console.log("reitti")
+function getStationCoordinates() {
+  graphQLClient.query(`
+    {
+  bikeRentalStation(id:"A01") {
+    lat
+    lon
+  }
+}
+ `).then(result => {
+      console.log(result)
+  })
+}
+
+
+function getRoute(lat1, lon1, lat2, lon2) {
   graphQLClient.query(`
 {
   plan(
