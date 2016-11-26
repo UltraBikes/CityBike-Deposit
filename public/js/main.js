@@ -376,7 +376,6 @@ function initializeMarkers() {
       }
     })
     setMarkerClickEvents(data)
-<<<<<<< Updated upstream
   })
 }
 
@@ -384,8 +383,6 @@ function getRoute() {
   getJSON('/api/route', function(data) {
     console.log(data.coordinates[0].lon + "mainissa")
     drawRoute(data)
-=======
->>>>>>> Stashed changes
   })
 }
 

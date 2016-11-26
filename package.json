@@ -19,6 +19,7 @@
     "lokka-transport-http": "1.4.0",
     "mongodb": "2.2.9",
     "nodemon": "1.10.2",
+    "polyline": "^0.2.0",
     "strftime": "^0.9.2"
   },
   "engines": {
