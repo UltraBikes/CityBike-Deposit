@@ -54,10 +54,8 @@ function initializeGoogleMaps() {
 * draws route based on JSON coordinatelist
 */
 function drawRoute(routeObj) {
-  console.log("piirto")
   console.log(routeObj.coordinates.length)
   for (var i = 0; i < routeObj.coordinates.length -2; i++) {
-      console.log(i)
         var line = new google.maps.Polyline({
         path: [new google.maps.LatLng(routeObj.coordinates[i].lat, routeObj.coordinates[i].lon), new google.maps.LatLng(routeObj.coordinates[i + 1].lat, routeObj.coordinates[i + 1].lon)],
         strokeColor: "#425cf4",
@@ -264,16 +262,14 @@ function setMarkerClickEvents () {
       for (var i=0; i<3; i++) {
         var smallestDistObj = {distance: 1000, marker: null, fullness: 0} // Max distance we show is 1000km
         // For each 'distance/marker' -pair
-        markerDistancesArr.forEach(function (obj) {
-          // Marker is the new nearest
-          if (smallestDistObj.distance > obj.distance && obj.distance !== -1) {
-            // Marker also has enough bikes, 50% at least
-            if (obj.fullness >= 0.5) {
-              obj.distance = -1
+        for (var y=0; y<markerDistancesArr.length; y++) {
+          var obj = markerDistancesArr[y]
+          // Marker is the new nearest and has >50% bikes
+          if (smallestDistObj.distance > obj.distance && obj.distance !== -1 && obj.fullness >= 0.5) {
               smallestDistObj = obj
-            }
           }
-        })
+        }
+        smallestDistObj.distance = -1
         nearestMarkersArr.push(smallestDistObj) // Nearest marker to user
       }
       // Clear map of markers
@@ -381,7 +377,6 @@ function initializeMarkers() {
 
 function getRoute() {
   getJSON('/api/route', function(data) {
-    console.log(data.coordinates[0].lon + "mainissa")
     drawRoute(data)
   })
 }
