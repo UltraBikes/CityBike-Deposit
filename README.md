@@ -1,10 +1,30 @@
 > Under development
 
-# Kaupunkifillari usage viewer and analyser
+# CityBike Deposit
 
-Application for viewing citybike station history on given date and time.
+This repository is for "CityBike Deposit"-demo for UltraHack 2016
 
-Forked from https://github.com/sampsakuronen/kaupunkifillarit-web
+## Notes of current project status
+
+Currently all the code and screenshots are made for a ultrahack-demo - not for an actual application. We are on the process of developing an actual application for season 2017.
+
+## Idea of the app
+
+**Problem**: bitybike stations are often empty. Especially in the mornings around the main railway station.
+
+**Current solution**: There is a man driving around with a pickup-truck and moving the bikes from full stations to empty ones.
+
+**Our solution**: Our app will reward users for riding the bikes to empty stations.
+
+**Business logic**: Current solution costs around 3e per biketransfer where as our app will reduce the costs to 1e per transfer incl. users reward and our provision.
+
+## Team
+
+We are 4 computer science students from Helsinki University
+* Heini Haatanen
+* Juha-Pekka Moilanen
+* Tuomo Torppa
+* Jasu Viding
 
 ## Development
 
@@ -14,15 +34,3 @@ npm install
 npm install strftime
 npm start / npm run watch
 ```
-
-## Licence
-
-The MIT License (MIT)
-
-Copyright (c) 2016 Sampsa Kuronen
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
